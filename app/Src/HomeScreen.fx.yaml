@@ -1,0 +1,396 @@
+HomeScreen As screen:
+    OnVisible: |-
+        =UpdateContext({pageno:1});
+        Set(btnNameWidth,0)
+
+    Component1_2 As Component1:
+        Height: =200
+        Width: =700
+        Y: =97
+
+    Dropdown1 As dropdown:
+        BorderColor: =RGBA(166, 166, 166, 1)
+        ChevronBackground: =RGBA(255, 255, 255, 1)
+        ChevronDisabledBackground: =RGBA(244, 244, 244, 1)
+        ChevronDisabledFill: =RGBA(166, 166, 166, 1)
+        ChevronFill: =RGBA(33, 33, 33, 1)
+        ChevronHoverBackground: =RGBA(212, 212, 212, 1)
+        ChevronHoverFill: =RGBA(33, 33, 33, 1)
+        Color: =RGBA(51, 51, 51, 1)
+        Default: =Last(Sequence(RoundDown(Gallery1.Height/Gallery1.TemplateHeight,0)*If(Gallery1.Width>1200,3,Gallery1.Width>768 && Gallery1.Width<1200,2,1))).Value
+        DisabledBorderColor: =RGBA(0, 0, 0, 0)
+        Font: =Font.'Segoe UI'
+        Height: =37
+        HoverBorderColor: =ColorFade(RGBA(0, 120, 212, 1), -30%)
+        HoverColor: =RGBA(51, 51, 51, 1)
+        HoverFill: =RGBA(212, 212, 212, 1)
+        Items: =Sequence(RoundDown(Gallery1.Height/Gallery1.TemplateHeight,0)*If(Gallery1.Width>1200,3,Gallery1.Width>768 && Gallery1.Width<1200,2,1))
+        OnChange: |-
+            =Set(
+                MaxElement,
+                Self.Selected.Value
+            );
+            Set(
+                ItemCount,
+                CountRows(
+                    Sequence(
+                        RoundDown(
+                            Gallery1.Height / Gallery1.TemplateHeight,
+                            0
+                        ) * If(
+                            Gallery1.Width > 1200,
+                            3,
+                            Gallery1.Width >= 768 && Gallery1.Width < 1200,
+                            2,
+                            1
+                        )
+                    )
+                )
+            );
+            UpdateContext({pageno: 1})
+        PaddingBottom: =5
+        PaddingLeft: =12
+        PaddingRight: =5
+        PaddingTop: =5
+        PressedBorderColor: =ColorFade(RGBA(0, 120, 212, 1), -30%)
+        PressedFill: =RGBA(0, 120, 212, 1)
+        Reset: =true
+        SelectionFill: =RGBA(0, 120, 212, 1)
+        Visible: =CountRows(Sequence(RoundDown(Gallery1.Height/Gallery1.TemplateHeight,0)*If(Gallery1.Width>1200,3,Gallery1.Width>768 && Gallery1.Width<1200,2,1)))<>1
+        Width: =66
+        X: =Parent.Width-Self.Width
+        Y: =Component1_2.Y-Self.Height-4
+        ZIndex: =5
+
+    Gallery1 As gallery.galleryVertical:
+        BorderStyle: =BorderStyle.None
+        BorderThickness: =1
+        DelayItemLoading: =true
+        Height: =Parent.Height-Self.Y
+        Items: |-
+            =If(
+                pageno = 1,
+                FirstN(
+                    'Travel requests with approvals',
+                    Dropdown1.Selected.Value
+                ),
+                Mod(
+                    CountRows('Travel requests with approvals'),
+                    Dropdown1.Selected.Value
+                ) = 0 && pageno = RoundUp(
+                    CountRows('Travel requests with approvals') / Dropdown1.Selected.Value,
+                    0
+                ),
+                LastN(
+                    'Travel requests with approvals',
+                    Dropdown1.Selected.Value
+                ),
+                pageno = RoundUp(
+                    CountRows('Travel requests with approvals') / Dropdown1.Selected.Value,
+                    0
+                ),
+                LastN(
+                    'Travel requests with approvals',
+                    Mod(
+                        CountRows('Travel requests with approvals'),
+                        Dropdown1.Selected.Value
+                    )
+                ),
+                LastN(
+                    FirstN(
+                        'Travel requests with approvals',
+                        Dropdown1.Selected.Value * pageno
+                    ),
+                    Dropdown1.Selected.Value
+                )
+            )
+        Layout: =Layout.Vertical
+        LoadingSpinner: =LoadingSpinner.Data
+        OnSelect: =
+        TemplatePadding: =0
+        TemplateSize: =220
+        Width: =If(App.Width>1300,Parent.Width-Self.X-10,Parent.Width-Self.X*2)
+        WrapCount: =If(Gallery1.Width>=1200,3,Gallery1.Width>=768 && Gallery1.Width<1200,2,1)
+        X: =If(App.Width>1300,130,25)
+        Y: =If(App.Width>1300,Component1_2.Y,55+Component1_2.Y)
+        ZIndex: =8
+
+        Container3 As groupContainer.manualLayoutContainer:
+            Fill: =RGBA(237, 237, 237, 0.15)
+            Height: =Parent.TemplateHeight-10
+            RadiusBottomLeft: =10
+            RadiusBottomRight: =10
+            RadiusTopLeft: =10
+            RadiusTopRight: =10
+            Width: =Parent.TemplateWidth-10
+            X: =10
+            ZIndex: =1
+
+            Label10 As label:
+                Height: =38
+                Text: =ThisItem.Title
+                Width: =298
+                Y: =2
+                ZIndex: =1
+
+            IconViewForm As icon.ArrowRight:
+                Height: =IconViewForm.Width
+                Icon: =Icon.ArrowRight
+                OnSelect: |-
+                    =Set(VarId,ThisItem.ID);
+                    Navigate('New Expense');
+                    ViewForm(Form2);
+                    Set(varTabList,"Journey Details")
+                Width: =44
+                X: =Parent.Width-Self.Width
+                Y: =Parent.Height-Self.Height
+                ZIndex: =2
+
+            Icon2 As icon.Edit:
+                Height: =38
+                Icon: =Icon.Edit
+                OnSelect: |-
+                    =Set(VarId,ThisItem.ID);
+                    Navigate('New Expense');
+                    EditForm(Form2);
+                    Set(varTabList,"Journey Details")
+                Width: =44
+                X: =Parent.Width-Self.Width
+                Y: =Parent.Y
+                ZIndex: =3
+
+            Icon3 As icon.CalendarBlank:
+                Height: =40
+                Icon: =Icon.CalendarBlank
+                Width: =30
+                Y: =170
+                ZIndex: =4
+
+            Label2 As label:
+                Text: =ThisItem.Airline.Value
+                Y: =73
+                ZIndex: =5
+
+            Label8 As label:
+                Align: =Align.Right
+                Color: =RGBA(54, 176, 75, 1)
+                Text: ="$ "&ThisItem.'Estimated airfare'
+                X: =Parent.Width-Self.Width
+                Y: =Label2.Y
+                ZIndex: =6
+
+            Label9 As label:
+                Text: =ThisItem.'Travel start date' &" <--> "&ThisItem.'Travel end date'
+                Width: =280
+                X: =30
+                Y: =170
+                ZIndex: =7
+
+    "TabList1 As 'Tab list'.pcfdataset":
+        Alignment: =If(App.Width>1300,'TabList.Alignment'.Vertical,'TabList.Alignment'.Horizontal)
+        DisplayMode: =DisplayMode.Edit
+        Font: =""
+        FontItalic: =false
+        FontSize: =0
+        FontStrikethrough: =false
+        FontUnderline: =false
+        FontWeight: =""
+        Height: =If(App.Width>1300,560,120)
+        Items: =["Home","New Journey","Dashboard","Reports"]
+        OnChange: =//Switch(TabList1.Selected.Value,"Home",Navigate(HomeScreen),"New Expense",Navigate('New Expense'),"Reports",Navigate(Reports))
+        Visible: =false
+        Width: =0
+        X: =0
+        Y: =85
+        ZIndex: =10
+
+        Value1 As pcfDataField.textualColumn:
+            FieldDisplayName: ="Value"
+            FieldName: ="Value"
+            FieldType: ="s"
+            FieldVariantName: ="textualColumn"
+            Order: =1
+            ZIndex: =5
+
+    IconUp As icon.ChevronRight:
+        BorderColor: =RGBA(166, 166, 166, 1)
+        Color: =RGBA(0, 120, 212, 1)
+        DisabledBorderColor: =RGBA(0, 0, 0, 0)
+        DisabledColor: =RGBA(220, 220, 220, 1)
+        DisabledFill: =RGBA(0, 0, 0, 0)
+        DisplayMode: =If(pageno<>1,DisplayMode.Edit,DisplayMode.Disabled)
+        Fill: =RGBA(255, 255, 255, 0.83)
+        FocusedBorderThickness: =4
+        Height: =IconUp.Width
+        HoverBorderColor: =RGBA(0, 0, 0, 0)
+        HoverColor: =ColorFade(RGBA(0, 120, 212, 1), -30%)
+        HoverFill: =RGBA(0, 0, 0, 0)
+        Icon: =Icon.ChevronUp
+        OnSelect: |-
+            =UpdateContext({pageno:pageno-1})
+        PressedBorderColor: =RGBA(0, 0, 0, 0)
+        PressedColor: =ColorFade(RGBA(0, 120, 212, 1), -30%)
+        PressedFill: =RGBA(0, 0, 0, 0)
+        Visible: |-
+            =pageno<>1&& If(
+                            Gallery1.Width > 1200,
+                            3,
+                            Gallery1.Width > 768 && Gallery1.Width < 1200,
+                            2,
+                            1
+                        )=1
+        Width: =45
+        X: =Parent.Width/2-20
+        Y: =128
+        ZIndex: =11
+
+    IconDown As icon.ChevronRight:
+        BorderColor: =RGBA(166, 166, 166, 1)
+        Color: =RGBA(0, 120, 212, 1)
+        DisabledBorderColor: =RGBA(0, 0, 0, 0)
+        DisabledColor: =RGBA(220, 220, 220, 1)
+        DisabledFill: =RGBA(0, 0, 0, 0)
+        DisplayMode: =If(pageno<>RoundUp(CountRows('Travel requests with approvals')/Dropdown1.Selected.Value,0),DisplayMode.Edit,DisplayMode.Disabled)
+        Fill: =RGBA(255, 255, 255, 0.83)
+        FocusedBorderThickness: =1
+        Height: =IconLeft.Height
+        HoverBorderColor: =RGBA(0, 0, 0, 0)
+        HoverColor: =ColorFade(RGBA(0, 120, 212, 1), -30%)
+        HoverFill: =RGBA(0, 0, 0, 0)
+        Icon: =Icon.ChevronDown
+        OnSelect: |-
+            =UpdateContext({pageno:pageno+1})
+        PressedBorderColor: =RGBA(0, 0, 0, 0)
+        PressedColor: =ColorFade(RGBA(0, 120, 212, 1), -30%)
+        PressedFill: =RGBA(0, 0, 0, 0)
+        Visible: |-
+            =pageno<>RoundUp(CountRows('Travel requests with approvals')/Dropdown1.Selected.Value,0)&& If(
+                            Gallery1.Width > 1200,
+                            3,
+                            Gallery1.Width > 768 && Gallery1.Width < 1200,
+                            2,
+                            1
+                        )=1
+        Width: =IconLeft.Width
+        X: =IconUp.X
+        Y: =Parent.Height-Self.Height-30
+        ZIndex: =12
+
+    IconLeft As icon.ChevronRight:
+        BorderColor: =RGBA(166, 166, 166, 1)
+        Color: =RGBA(0, 120, 212, 1)
+        DisabledBorderColor: =RGBA(0, 0, 0, 0)
+        DisabledColor: =RGBA(220, 220, 220, 1)
+        DisabledFill: =RGBA(0, 0, 0, 0)
+        DisplayMode: =If(pageno<>1,DisplayMode.Edit,DisplayMode.Disabled)
+        Fill: =RGBA(255, 255, 255, 0.83)
+        FocusedBorderThickness: =4
+        Height: =IconLeft.Width
+        HoverBorderColor: =RGBA(0, 0, 0, 0)
+        HoverColor: =ColorFade(RGBA(0, 120, 212, 1), -30%)
+        HoverFill: =RGBA(0, 0, 0, 0)
+        Icon: =Icon.ChevronLeft
+        OnSelect: |-
+            =UpdateContext({pageno:pageno-1})
+        PressedBorderColor: =RGBA(0, 0, 0, 0)
+        PressedColor: =ColorFade(RGBA(0, 120, 212, 1), -30%)
+        PressedFill: =RGBA(0, 0, 0, 0)
+        Visible: |-
+            =pageno<>1&& If(
+                            Gallery1.Width > 1200,
+                            3,
+                            Gallery1.Width > 768 && Gallery1.Width < 1200,
+                            2,
+                            1
+                        )<>1
+        Width: =45
+        Y: =(Gallery1.Height+Gallery1.Y)/2+Self.Height/2
+        ZIndex: =13
+
+    IconRight As icon.ChevronRight:
+        BorderColor: =RGBA(166, 166, 166, 1)
+        Color: =RGBA(0, 120, 212, 1)
+        DisabledBorderColor: =RGBA(0, 0, 0, 0)
+        DisabledColor: =RGBA(220, 220, 220, 1)
+        DisabledFill: =RGBA(0, 0, 0, 0)
+        DisplayMode: =If(pageno<>RoundUp(CountRows('Travel requests with approvals')/Dropdown1.Selected.Value,0),DisplayMode.Edit,DisplayMode.Disabled)
+        Fill: =RGBA(255, 255, 255, 0.83)
+        FocusedBorderThickness: =1
+        Height: =IconLeft.Height
+        HoverBorderColor: =RGBA(0, 0, 0, 0)
+        HoverColor: =ColorFade(RGBA(0, 120, 212, 1), -30%)
+        HoverFill: =RGBA(0, 0, 0, 0)
+        Icon: =Icon.ChevronRight
+        OnSelect: |-
+            =UpdateContext({pageno:pageno+1})
+        PressedBorderColor: =RGBA(0, 0, 0, 0)
+        PressedColor: =ColorFade(RGBA(0, 120, 212, 1), -30%)
+        PressedFill: =RGBA(0, 0, 0, 0)
+        Visible: |-
+            =pageno<>RoundUp(CountRows('Travel requests with approvals')/Dropdown1.Selected.Value,0)&& If(
+                            Gallery1.Width > 1200,
+                            3,
+                            Gallery1.Width > 768 && Gallery1.Width < 1200,
+                            2,
+                            1
+                        )<>1
+        Width: =IconLeft.Width
+        X: =Parent.Width-Self.Width
+        Y: =IconLeft.Y
+        ZIndex: =14
+
+    Label12 As label:
+        Align: =If(App.Width>1000,Align.Center,Align.Justify)
+        Height: =47
+        Size: =25
+        Text: ="Travel Requests"
+        Width: =Parent.Width
+        ZIndex: =15
+
+    Rectangle1 As rectangle:
+        Fill: =RGBA(149, 149, 149, 0.5)
+        Height: =Parent.Height-Self.Y
+        OnSelect: =Set(btnNameWidth,0)
+        Visible: =btnNameWidth<>0 && App.Width<=600
+        Width: =Parent.Width
+        ZIndex: =16
+
+    btnName As button:
+        Align: =Align.Right
+        BorderThickness: =1
+        Color: =RGBA(0, 0, 0, 1)
+        Fill: =RGBA(255, 255, 255, 1)
+        FocusedBorderThickness: =1
+        FontWeight: =FontWeight.Normal
+        Height: =45
+        HoverColor: =RGBA(0, 0, 0, 1)
+        HoverFill: =RGBA(255, 255, 255, 1)
+        OnSelect: =
+        PaddingRight: =55
+        PressedBorderColor: =Self.BorderColor
+        PressedColor: =Self.Color
+        PressedFill: =Self.Fill
+        RadiusBottomLeft: =50
+        RadiusBottomRight: =50
+        RadiusTopLeft: =50
+        RadiusTopRight: =50
+        Size: =13
+        Text: =User().FullName
+        Width: =If(App.Width<=600,btnNameWidth,350)
+        X: =Parent.Width-Self.Width
+        Y: =2
+        ZIndex: =17
+
+    Image1 As image:
+        Height: =btnName.Height
+        Image: =Office365Users.UserPhotoV2(User().Email)
+        OnSelect: =If(App.Width<=600,Set(btnNameWidth,350))
+        RadiusBottomLeft: =50
+        RadiusBottomRight: =50
+        RadiusTopLeft: =50
+        RadiusTopRight: =50
+        Width: =btnName.Height
+        X: =Parent.Width-Self.Width
+        Y: =2
+        ZIndex: =18
+

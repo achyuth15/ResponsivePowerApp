@@ -1,0 +1,39 @@
+Component1 As CanvasComponent:
+    Fill: =RGBA(0, 0, 0, 0)
+    Height: =690
+    Width: =560
+    X: =0
+    Y: =0
+    ZIndex: =1
+
+    "TabList1_1 As 'Tab list'.pcfdataset":
+        Alignment: =If(App.Width>1300,'TabList.Alignment'.Vertical,'TabList.Alignment'.Horizontal)
+        DefaultSelectedItems: |-
+            ={Value:varTabList}
+        DisplayMode: =DisplayMode.Edit
+        Font: =""
+        FontItalic: =false
+        FontSize: =0
+        FontStrikethrough: =false
+        FontUnderline: =false
+        FontWeight: =""
+        Height: =If(App.Width>1300,560,120)
+        Items: =["Home","New Journey","Journey Details","Dashboard","Reports"]
+        OnChange: |-
+            =Switch(TabList1_1.Selected.Value,"Home",Navigate(HomeScreen),"New Journey",Navigate('New Expense');NewForm(Form2),"Journey details",Navigate('New Expense'),"Reports",Navigate(Reports));
+            Set(varTabList,TabList1_1.Selected.Value)
+        Width: |-
+            =//If(App.Width>1300,120,540)
+            App.Width
+        X: =0
+        Y: =0
+        ZIndex: =1
+
+        Value1_1 As pcfDataField.textualColumn:
+            FieldDisplayName: ="Value"
+            FieldName: ="Value"
+            FieldType: ="s"
+            FieldVariantName: ="textualColumn"
+            Order: =1
+            ZIndex: =5
+

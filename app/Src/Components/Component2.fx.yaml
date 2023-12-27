@@ -1,0 +1,60 @@
+Component2 As CanvasComponent:
+    CustomProperty1: ="Text"
+    CustomProperty2: =App.ActiveScreen
+    Fill: =RGBA(0, 0, 0, 0)
+    Height: =App.Height
+    Width: =App.Width
+    X: =0
+    Y: =0
+    ZIndex: =1
+
+    Label12_1 As label:
+        Align: =If(App.Width>1000,Align.Center,Align.Justify)
+        Height: =47
+        Size: =25
+        Text: ="Travel Requests"
+        Width: =Parent.Width
+        ZIndex: =2
+
+    Rectangle1_1 As rectangle:
+        Fill: =RGBA(0, 0, 0, 0)
+        Height: =Parent.Height
+        OnSelect: =Set(btnNameWidth,0)
+        Visible: =btnName_1.Width<>0 && App.Width<500
+        Width: =Parent.Width
+        ZIndex: =3
+
+    btnName_1 As button:
+        Align: =Align.Right
+        Color: =RGBA(0, 0, 0, 1)
+        Fill: =RGBA(255, 255, 255, 1)
+        FontWeight: =FontWeight.Normal
+        Height: =45
+        HoverColor: =RGBA(0, 0, 0, 1)
+        HoverFill: =RGBA(255, 255, 255, 1)
+        OnSelect: =
+        PaddingRight: =55
+        RadiusBottomLeft: =50
+        RadiusBottomRight: =50
+        RadiusTopLeft: =50
+        RadiusTopRight: =50
+        Size: =13
+        Text: =User().FullName
+        Width: =If(App.Width<500,btnNameWidth,350)
+        X: =Parent.Width-Self.Width
+        Y: =2
+        ZIndex: =4
+
+    Image1_1 As image:
+        Height: =btnName_1.Height
+        Image: =Office365Users.UserPhotoV2(User().Email)
+        OnSelect: =If(App.Width<500,Set(btnNameWidth,350))
+        RadiusBottomLeft: =50
+        RadiusBottomRight: =50
+        RadiusTopLeft: =50
+        RadiusTopRight: =50
+        Width: =btnName_1.Height
+        X: =Parent.Width-Self.Width
+        Y: =2
+        ZIndex: =5
+
